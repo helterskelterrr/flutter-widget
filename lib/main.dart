@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-// Entry point of the app
 void main() {
   runApp(const MyApp());
 }
 
-// MyApp — root widget (StatelessWidget)
-// Sets up MaterialApp with theme and home page.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,14 +16,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const ProfilePage(), // Start directly on the profile page
+      home: const ProfilePage(),
     );
   }
 }
 
-// ProfilePage — StatefulWidget
-// Owns the "isFollowed" state and passes it
-// down to ProfileCard for display.
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -36,11 +30,17 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isFollowed = false;
+  int _counter = 0; 
 
-  // Called when the Follow / Unfollow button is pressed.
+  // Fungsi follow/unfollow yang sekarang mempengaruhi counter
   void _toggleFollow() {
     setState(() {
-      _isFollowed = !_isFollowed; // Flip the value
+      _isFollowed = !_isFollowed;
+      if (_isFollowed) {
+        _counter++; // Tambah 1 saat follow
+      } else {
+        _counter--; // Kurang 1 saat unfollow
+      }
     });
   }
 
@@ -59,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Center(
         child: ProfileCard(
           isFollowed: _isFollowed,
+          counter: _counter,
           onFollowToggle: _toggleFollow,
         ),
       ),
@@ -66,16 +67,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-// ProfileCard — StatelessWidget
-// Pure display widget. Receives data via
-// constructor and renders the card layout.
 class ProfileCard extends StatelessWidget {
   final bool isFollowed;
+  final int counter;
   final VoidCallback onFollowToggle;
 
   const ProfileCard({
     super.key,
     required this.isFollowed,
+    required this.counter,
     required this.onFollowToggle,
   });
 
@@ -120,10 +120,7 @@ class ProfileCard extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // Name
               const Text(
                 'Nadief Aqila Rabbani',
                 style: TextStyle(
@@ -132,10 +129,7 @@ class ProfileCard extends StatelessWidget {
                   color: Colors.indigo,
                 ),
               ),
-
               const SizedBox(height: 6),
-
-              // Short Description
               const Text(
                 'Game Designer, Game Developer, and ML Engineer\nBased in Sidoarjo, Indonesia.',
                 textAlign: TextAlign.center,
@@ -145,15 +139,10 @@ class ProfileCard extends StatelessWidget {
                   height: 1.5,
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // Divider
               const Divider(height: 1, color: Color(0xFFE0E0E0)),
-
               const SizedBox(height: 20),
-
-              // Hobby / Skill Icons Row
+              // Hobby Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
@@ -161,30 +150,39 @@ class ProfileCard extends StatelessWidget {
                   SizedBox(width: 24),
                   _HobbyIcon(icon: Icons.brush, label: 'Design'),
                   SizedBox(width: 24),
-                  _HobbyIcon(icon: Icons.music_note, label: 'Music'),
-                  SizedBox(width: 24),
                   _HobbyIcon(icon: Icons.sports_esports, label: 'Gaming'),
                 ],
               ),
-
               const SizedBox(height: 24),
-
-              // Follow / Unfollow Button
+              // ── Counter Section
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // Pusatkan agar rapi
+                  children: [
+                    const Icon(Icons.people, color: Colors.indigo, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Followers: $counter',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.indigo,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: onFollowToggle,
-                icon: Icon(
-                  isFollowed ? Icons.check : Icons.add,
-                  size: 18,
-                ),
-                label: Text(
-                  isFollowed ? 'Following' : 'Follow',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                icon: Icon(isFollowed ? Icons.check : Icons.person_add, size: 18),
+                label: Text(isFollowed ? 'Following' : 'Follow'),
                 style: ElevatedButton.styleFrom(
-                  // Button turns green when followed, indigo when not
                   backgroundColor: isFollowed ? Colors.green : Colors.indigo,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 48),
@@ -201,13 +199,9 @@ class ProfileCard extends StatelessWidget {
   }
 }
 
-// HobbyIcon — private StatelessWidget
-// A small reusable widget for a single hobby:
-// an Icon above a short label text.
 class _HobbyIcon extends StatelessWidget {
   final IconData icon;
   final String label;
-
   const _HobbyIcon({required this.icon, required this.label});
 
   @override
@@ -223,10 +217,7 @@ class _HobbyIcon extends StatelessWidget {
           child: Icon(icon, color: Colors.indigo, size: 22),
         ),
         const SizedBox(height: 6),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 11, color: Colors.grey),
-        ),
+        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
       ],
     );
   }
