@@ -1,9 +1,3 @@
-# Dokumentasi Widget — Geralt Profile Card
-
-Dokumen ini menjelaskan seluruh widget Flutter yang digunakan dalam proyek **Geralt Profile Card** secara teknikal. Setiap widget disertai potongan kode relevan dan penjelasan cara kerjanya dalam konteks proyek ini.
-
----
-
 ## Daftar Isi
 
 1. [MaterialApp](#1-materialapp)
@@ -30,8 +24,7 @@ Dokumen ini menjelaskan seluruh widget Flutter yang digunakan dalam proyek **Ger
 ---
 
 ## 1. MaterialApp
-
-`MaterialApp` adalah widget root yang membungkus seluruh aplikasi. Widget ini menyediakan infrastruktur navigasi, tema global, dan berbagai konfigurasi tingkat aplikasi.
+Widget root yang mengatur tema global dan navigasi aplikasi.
 
 ```dart
 return MaterialApp(
@@ -48,24 +41,28 @@ return MaterialApp(
 ---
 
 ## 2. StatelessWidget
-
-`StatelessWidget` adalah widget yang tidak memiliki state internal yang dapat berubah. UI-nya murni ditentukan oleh data yang diterima melalui konstruktor. Contoh: `ProfileCard` dan `_HobbyIcon`.
+Widget yang tidak memiliki state internal yang dapat berubah. UI-nya murni ditentukan oleh data yang diterima melalui konstruktor.
 
 ```dart
 class ProfileCard extends StatelessWidget {
-  // ... data diterima lewat konstruktor
-  @override
-  Widget build(BuildContext context) {
-    // UI statis berdasarkan input
-  }
+  final bool isFollowed;
+  final int counter;
+  final VoidCallback onFollowToggle;
+
+  const ProfileCard({
+    super.key,
+    required this.isFollowed,
+    required this.counter,
+    required this.onFollowToggle,
+  });
+  // ...
 }
 ```
 
 ---
 
 ## 3. StatefulWidget dan State
-
-`StatefulWidget` digunakan ketika widget perlu menyimpan data yang bisa berubah selama siklus hidupnya, seperti status follow dan jumlah pengikut.
+Widget yang dapat menyimpan data yang berubah (state) selama aplikasi berjalan, seperti status follow dan jumlah pengikut.
 
 ```dart
 class _ProfilePageState extends State<ProfilePage> {
@@ -75,149 +72,247 @@ class _ProfilePageState extends State<ProfilePage> {
   void _toggleFollow() {
     setState(() {
       _isFollowed = !_isFollowed;
-      if (_isFollowed) _counter++;
-      else _counter--;
+      if (_isFollowed) {
+        _counter++;
+      } else {
+        _counter--;
+      }
     });
   }
+  // ...
 }
 ```
 
 ---
 
 ## 4. MediaQuery
-
-`MediaQuery` digunakan untuk mendapatkan informasi ukuran layar secara real-time untuk membuat UI yang responsif.
+Digunakan untuk membuat UI yang responsif dengan mengambil informasi ukuran layar perangkat.
 
 ```dart
 double screenWidth = MediaQuery.of(context).size.width;
-// Digunakan untuk: width: screenWidth * 0.85
 ```
 
 ---
 
 ## 5. Scaffold
+Menyediakan struktur dasar layout visual Material Design.
 
-`Scaffold` menyediakan struktur dasar layout visual Material Design, seperti `appBar`, `body`, dan `backgroundColor`.
+```dart
+return Scaffold(
+  backgroundColor: const Color(0xFFF0F2F5),
+  appBar: AppBar(...),
+  body: Center(...),
+);
+```
 
 ---
 
 ## 6. AppBar
+Menampilkan bar di bagian atas aplikasi dengan judul dan warna latar.
 
-`AppBar` adalah bar bagian atas aplikasi yang menampilkan judul ("Witcher Profile") dengan warna latar belakang `indigo`.
+```dart
+appBar: AppBar(
+  backgroundColor: Colors.indigo,
+  centerTitle: true,
+  title: const Text(
+    'Witcher Profile',
+    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+  ),
+),
+```
 
 ---
 
 ## 7. Center
+Memastikan widget di dalamnya berada tepat di tengah ruang yang tersedia.
 
-`Center` memastikan `ProfileCard` berada tepat di tengah layar baik secara vertikal maupun horizontal.
+```dart
+body: Center(
+  child: ProfileCard(...),
+),
+```
 
 ---
 
 ## 8. Padding
+Memberikan jarak kosong (internal spacing) di sekeliling widget anaknya.
 
-`Padding` memberikan ruang kosong di dalam `ProfileCard` (sebesar 28.0) agar elemen-elemen di dalamnya tidak menyentuh tepi kartu.
+```dart
+child: Padding(
+  padding: const EdgeInsets.all(28.0),
+  child: Column(...),
+),
+```
 
 ---
 
 ## 9. Container
+Widget serbaguna yang menggabungkan dekorasi, padding, dan batasan ukuran.
 
-`Container` adalah widget serbaguna yang digunakan sebagai pembungkus kartu profil (dengan dekorasi) dan pembungkus seksi counter.
+```dart
+return Container(
+  width: screenWidth * 0.85,
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(24),
+    boxShadow: const [...],
+  ),
+  child: Padding(...),
+);
+```
 
 ---
 
 ## 10. BoxDecoration
+Digunakan oleh Container untuk mengatur styling visual seperti warna, border, dan bayangan.
 
-`BoxDecoration` digunakan bersama `Container` untuk memberikan warna latar, radius sudut (`borderRadius`), serta efek bayangan (`boxShadow`).
+```dart
+decoration: BoxDecoration(
+  color: Colors.white,
+  borderRadius: BorderRadius.circular(24),
+  boxShadow: const [
+    BoxShadow(
+      color: Colors.black12,
+      blurRadius: 16,
+      offset: Offset(0, 6),
+    ),
+  ],
+),
+```
 
 ---
 
 ## 11. Column
+Menata elemen secara vertikal dari atas ke bawah.
 
-`Column` menata elemen-elemen secara vertikal (dari atas ke bawah): Foto -> Nama -> Bio -> Divider -> Hobby -> Counter -> Tombol.
+```dart
+child: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Container(...), // Profile Image
+    const SizedBox(height: 16),
+    const Text('Geralt of Rivia', ...),
+    // ...
+  ],
+),
+```
 
 ---
 
 ## 12. ClipOval
+Memotong widget anaknya menjadi bentuk lingkaran atau oval.
 
-`ClipOval` digunakan untuk memotong widget anaknya (dalam hal ini `AspectRatio` berisi gambar) menjadi bentuk oval/lingkaran sempurna.
+```dart
+child: ClipOval(
+  child: AspectRatio(
+    aspectRatio: 1.0,
+    child: Image.asset(...),
+  ),
+),
+```
 
 ---
 
 ## 13. AspectRatio
+Memastikan widget anaknya mempertahankan rasio dimensi tertentu (lebar:tinggi).
 
-`AspectRatio` memastikan widget di dalamnya memiliki perbandingan lebar dan tinggi yang tetap (1:1), sehingga gambar Geralt tidak terlihat gepeng.
+```dart
+child: AspectRatio(
+  aspectRatio: 1.0,
+  child: Image.asset(...),
+),
+```
 
 ---
 
 ## 14. Image.asset
-
-`Image.asset` memuat gambar dari folder lokal `gambar/`. Dilengkapi dengan `errorBuilder` untuk menampilkan ikon default jika file tidak ditemukan.
+Menampilkan gambar dari folder aset lokal proyek.
 
 ```dart
-Image.asset(
+child: Image.asset(
   'gambar/geralt-of-rivia-icon-the-witcher-3-wild-hunt-wiki-guide.png',
   fit: BoxFit.cover,
-)
+  errorBuilder: (context, error, stack) => const Icon(
+    Icons.person,
+    size: 80,
+    color: Colors.indigo,
+  ),
+),
 ```
 
 ---
 
 ## 15. SizedBox
+Digunakan untuk memberikan jarak statis (spasi) antar elemen UI.
 
-`SizedBox` digunakan sebagai pemberi jarak (spasi) antar widget dengan menentukan nilai `height` atau `width` yang spesifik.
+```dart
+const SizedBox(height: 16),
+```
 
 ---
 
 ## 16. Text dan TextStyle
+Menampilkan teks dengan berbagai gaya (ukuran, warna, ketebalan font).
 
-`Text` digunakan untuk menampilkan informasi string, sementara `TextStyle` mengatur ukuran font, ketebalan (`fontWeight`), dan warna teks.
+```dart
+const Text(
+  'Geralt of Rivia',
+  style: TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: Colors.indigo,
+  ),
+),
+```
 
 ---
 
 ## 17. Divider
+Menampilkan garis pemisah horizontal yang tipis.
 
-`Divider` menampilkan garis horizontal tipis untuk memisahkan bagian biografi dengan bagian hobi.
+```dart
+const Divider(height: 1, color: Color(0xFFE0E0E0)),
+```
 
 ---
 
 ## 18. Row
+Menata elemen secara horizontal dari kiri ke kanan.
 
-`Row` menata elemen secara horizontal. Digunakan untuk menampilkan deretan ikon hobi (Combat, Alchemy, Gwent).
+```dart
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: const [
+    _HobbyIcon(icon: Icons.sports_martial_arts, label: 'Combat'),
+    SizedBox(width: 20),
+    // ...
+  ],
+),
+```
 
 ---
 
 ## 19. Icon
+Menampilkan simbol grafis dari library material icons.
 
-`Icon` menampilkan simbol grafis dari library `Icons`. Ikon tombol Follow berubah secara dinamis antara `person_add` dan `check`.
+```dart
+const Icon(Icons.people, color: Colors.indigo, size: 20),
+```
 
 ---
 
 ## 20. ElevatedButton.icon
+Tombol interaktif yang menggabungkan ikon dan label teks, mendukung aksi klik.
 
-Widget tombol yang menyertakan ikon dan label teks. Warna tombol berubah secara dinamis: biru (`indigo`) saat belum di-follow, dan hijau (`green`) saat sudah di-follow.
-
----
-
-## Ringkasan Arsitektur Widget
-
+```dart
+ElevatedButton.icon(
+  onPressed: onFollowToggle,
+  icon: Icon(isFollowed ? Icons.check : Icons.person_add, size: 18),
+  label: Text(isFollowed ? 'Following' : 'Follow'),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: isFollowed ? Colors.green : Colors.indigo,
+    foregroundColor: Colors.white,
+    // ...
+  ),
+),
 ```
-ProfilePage (Stateful)
-└── Scaffold
-    └── Center
-        └── ProfileCard (Stateless)
-            └── Column
-                ├── Container (Profile Image + ClipOval + AspectRatio + Image.asset)
-                ├── Text (Name)
-                ├── Text (Bio)
-                ├── Divider
-                ├── Row (Hobby Icons)
-                ├── Container (Counter Section)
-                └── ElevatedButton.icon (Follow Button)
-```
-
----
-
-## Konsep Kunci: Responsivitas & Sinkronisasi State
-
-1.  **Responsivitas**: Penggunaan `MediaQuery` memastikan kartu profil tampil proporsional (85% lebar layar) di berbagai ukuran perangkat.
-2.  **Sinkronisasi State**: Fungsi `setState` dalam `ProfilePage` memastikan bahwa perubahan pada tombol Follow langsung memperbarui angka Followers secara bersamaan.
