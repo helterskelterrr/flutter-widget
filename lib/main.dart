@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Profile Card App',
+      title: 'Geralt Profile Card',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
@@ -30,16 +30,15 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isFollowed = false;
-  int _counter = 0; 
+  int _counter = 1500; // Counter awal untuk Geralt
 
-  // Fungsi follow/unfollow yang sekarang mempengaruhi counter
   void _toggleFollow() {
     setState(() {
       _isFollowed = !_isFollowed;
       if (_isFollowed) {
-        _counter++; // Tambah 1 saat follow
+        _counter++;
       } else {
-        _counter--; // Kurang 1 saat unfollow
+        _counter--;
       }
     });
   }
@@ -52,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.indigo,
         centerTitle: true,
         title: const Text(
-          'Profile Card',
+          'Witcher Profile',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -81,36 +80,37 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 16,
-              offset: Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(28.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // ── Profile Image
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.indigo, width: 3),
-                ),
-                child: ClipOval(
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Container(
+      width: screenWidth * 0.85,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 16,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(28.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.indigo, width: 3),
+              ),
+              child: ClipOval(
+                child: AspectRatio(
+                  aspectRatio: 1.0,
                   child: Image.asset(
-                    'gambar/WhatsApp Image 2026-03-16 at 11.35.31.jpeg',
-                    width: 100,
-                    height: 100,
+                    'gambar/geralt-of-rivia-icon-the-witcher-3-wild-hunt-wiki-guide.png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stack) => const Icon(
                       Icons.person,
@@ -120,79 +120,79 @@ class ProfileCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Nadief Aqila Rabbani',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.indigo,
-                ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Geralt of Rivia',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigo,
               ),
-              const SizedBox(height: 6),
-              const Text(
-                'Game Designer, Game Developer, and ML Engineer\nBased in Sidoarjo, Indonesia.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                  height: 1.5,
-                ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Monster Slayer, Witcher, and Swordsman\nBased in Kaer Morhen, The Continent.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+                height: 1.5,
               ),
-              const SizedBox(height: 20),
-              const Divider(height: 1, color: Color(0xFFE0E0E0)),
-              const SizedBox(height: 20),
-              // Hobby Row
-              Row(
+            ),
+            const SizedBox(height: 20),
+            const Divider(height: 1, color: Color(0xFFE0E0E0)),
+            const SizedBox(height: 20),
+            // Hobby Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                _HobbyIcon(icon: Icons.sports_martial_arts, label: 'Combat'),
+                SizedBox(width: 20),
+                _HobbyIcon(icon: Icons.science, label: 'Alchemy'),
+                SizedBox(width: 20),
+                _HobbyIcon(icon: Icons.style, label: 'Gwent'),
+              ],
+            ),
+            const SizedBox(height: 24),
+            // ── Counter Section
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.indigo.shade50,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  _HobbyIcon(icon: Icons.code, label: 'Code'),
-                  SizedBox(width: 24),
-                  _HobbyIcon(icon: Icons.brush, label: 'Design'),
-                  SizedBox(width: 24),
-                  _HobbyIcon(icon: Icons.sports_esports, label: 'Gaming'),
+                children: [
+                  const Icon(Icons.people, color: Colors.indigo, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Followers: $counter',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.indigo,
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 24),
-              // ── Counter Section
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.indigo.shade50,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: onFollowToggle,
+              icon: Icon(isFollowed ? Icons.check : Icons.person_add, size: 18),
+              label: Text(isFollowed ? 'Following' : 'Follow'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isFollowed ? Colors.green : Colors.indigo,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 48),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // Pusatkan agar rapi
-                  children: [
-                    const Icon(Icons.people, color: Colors.indigo, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Followers: $counter',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.indigo,
-                      ),
-                    ),
-                  ],
-                ),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: onFollowToggle,
-                icon: Icon(isFollowed ? Icons.check : Icons.person_add, size: 18),
-                label: Text(isFollowed ? 'Following' : 'Follow'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isFollowed ? Colors.green : Colors.indigo,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
