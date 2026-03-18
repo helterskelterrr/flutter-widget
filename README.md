@@ -1,3 +1,6 @@
 # nyoba_aja
 
-untuk laporan ada di WIDGETS.md
+
+Nadief Aqila Rabbani (5025231128) - PPB (D)
+
+Untuk laporan ada di WIDGETS.md
