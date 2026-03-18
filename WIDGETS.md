@@ -1,5 +1,6 @@
 ## Daftar Isi
 
+0. [WidgetTree] (#0-widgettree)
 1. [MaterialApp](#1-materialapp)
 2. [StatelessWidget](#2-statelesswidget)
 3. [StatefulWidget dan State](#3-statefulwidget-dan-state)
@@ -19,6 +20,9 @@
 17. [IconButton](#17-iconbutton)
 
 ---
+
+## 0. Widget Tree
+<img width="4368" height="1668" alt="image" src="https://github.com/user-attachments/assets/d2e62ecc-6e3f-44c2-9cd3-24c7e8de7dfb" />
 
 ## 1. MaterialApp
 Widget root yang mengatur tema gelap global (`Brightness.dark`) dan skema warna khusus Witcher.
